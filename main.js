@@ -1,28 +1,29 @@
 class Node{
     constructor(position){
         this.position           = position;
-        this.UpTwoRightOne      = [this.position[0]+1,this.position[1]+2]; 
-        this.UpTwoLeftOne       = [this.position[0]-1,this.position[1]+2];
-        this.UpOneRightTwo      = [this.position[0]+2,this.position[1]+1];
-        this.UpOneLeftTwo       = [this.position[0]-2,this.position[1]+1];
-        this.DownTwoRightOne    = [this.position[0]+1,this.position[1]-2];
-        this.DownTwoLeftOne     = [this.position[0]-1,this.position[1]-2];
-        this.DownOneRightTwo    = [this.position[0]+2,this.position[1]-1];
-        this.DownOneLeftTwo     = [this.position[0]-1,this.position[1]-1];
+        this.UpTwoRightOne      = null; 
+        this.UpTwoLeftOne       = null;
+        this.UpOneRightTwo      = null;
+        this.UpOneLeftTwo       = null;
+        this.DownTwoRightOne    = null;
+        this.DownTwoLeftOne     = null;
+        this.DownOneRightTwo    = null;
+        this.DownOneLeftTwo     = null;
     }
 };                    
 
 function inBounds(position){
-    if(position[0] < 0 || position[0] < 0){
-        return false;
-    } else if(position[0] > 7 || position[0] > 7){
-        return false;
-    } else if(position[1] < 0 || position[1] < 0){
-        return false;
-    } else if(position[1] > 7 || position[1] > 7){
-        return false;
-    } else
+    let x = position[0]
+    let y = position[1]
+    let yHigh   = (y > 7);
+    let yLow    = (y < 0);
+    let xHigh   = (x > 7);
+    let xLow    = (x < 0);
+
+    if(!yHigh&&!yLow&&!xHigh&&!xLow){
         return true;
+    } else
+        return false;
 }
 
 function notVisited(node, visited){
@@ -35,46 +36,107 @@ function notVisited(node, visited){
 
 let visited = [];
 
-function buildTree(root){
-    visited.push(root.position)
-    if(inBounds(root.UpTwoRightOne)&&notVisited(root.UpTwoRightOne)){
-        const UUR = new Node(root.UpTwoRightOne)
-        buildTree(UUR);
-    }
-    if(inBounds(root.UpTwoLeftOne)&&notVisited(root.UpTwoLeftOne)){
-        const UUL = new Node(root.UpTwoLeftOne)
-        buildTree(UUL);
-    }
-    if(inBounds(root.UpOneRightTwo&&notVisited(root.UpOneRightTwo))){
-        const URR = new Node(root.UpOneRightTwo)
-        buildTree(URR);
-    }
-    if(inBounds(root.UpOneLeftTwo&&notVisited(root.UpOneLeftTwo))){
-        const ULL = new Node(root.UpOneLeftTwo)
-        buildTree(ULL);
-    }
-    if(inBounds(root.DownTwoRightOne&&notVisited(root.DownTwoRightOne))){
-        const DDR = new Node(root.DownTwoRightOne)
-        buildTree(DDR);
-    }
-    if(inBounds(root.DownTwoLeftOne&&notVisited(root.DownTwoLeftOne))){
-        const DDL = new Node(root.UpTwoLeftOne)
-        buildTree(DDL);
-    }
-    if(inBounds(root.DownOneRightTwo&&notVisited(root.DownOneRightTwo))){
-        const DRR = new Node(root.DownOneRightTwo)
-        buildTree(DRR);
-    }
-    if(inBounds(root.DownOneLeftTwo&&notVisited(root.DownOneLeftTwo))){
-        const DLL = new Node(root.DownOneLeftTwo)
-        buildTree(DLL);
-    }
 
+// function buildTree(root){
+//     let x = root.position[0];
+//     let y = root.position[1];
+//     if(inBounds([x+1,y+2])&&notVisited([x+1,y+2], visited)&&visited.length<64){
+//             const UUR = new Node([x+1,y+2])
+//             root.UpTwoRightOne = UUR;
+//             visited.push(UUR.position)
+//             buildTree(UUR);
+//     };
+//     if(inBounds([x-1,y+2])&&notVisited([x-1,y+2], visited)&&visited.length<64){
+//             const UUL = new Node([x-1,y+2])
+//             root.UpTwoLeftOne = UUL;
+//             visited.push(UUL.position)
+//             buildTree(UUL);
+//     };
+//     if(inBounds([x+2,y+1])&&notVisited([x+2,y+1], visited)&&visited.length<64){
+//             const URR = new Node([x+2,y+1])
+//             root.UpOneRightTwo = URR;
+//             visited.push(URR.position)
+//             buildTree(URR);
+//     };
+//     if(inBounds([x-2,y+1])&&notVisited([x-2,y+1], visited)&&visited.length<64){
+//             const ULL = new Node([x-2,y+1])
+//             root.UpOneLeftTwo = ULL;
+//             visited.push(ULL.position)
+//             buildTree(ULL);
+//     };
+//     if(inBounds([x+1,y-2])&&notVisited([x+1,y-2], visited)&&visited.length<64){
+//             const DDR = new Node([x+1,y-2])
+//             root.DownTwoRightOne = DDR;
+//             visited.push(DDR.position)
+//             buildTree(DDR);
+//     };
+//     if(inBounds([x-1,y-2])&&notVisited([x-1,y-2], visited)&&visited.length<64){
+//             const DDL = new Node([x-1,y-2])
+//             root.DownTwoLeftOne = DDL;
+//             visited.push(DDL.position)
+//             buildTree(DDL);
+//     };
+//     if(inBounds([x+2,y-1])&&notVisited([x+2,y-1], visited)&&visited.length<64){
+//             const DRR = new Node([x+2,y-1])
+//             root.DownOneRightTwo = DRR;
+//             visited.push(DRR.position)
+//             buildTree(DRR);
+//     };
+//     if(inBounds([x-2,y-1])&&notVisited([x-2,y-1], visited)&&visited.length<64){
+//             const DLL = new Node([x-2,y-1])
+//             root.DownOneLeftTwo = DLL;
+//             visited.push(DLL.position)
+//             buildTree(DLL);
+//     };
+//     return root;
+// }
+
+function buildTree(root, end){
+    console.log(root)
+    console.log(end)
+    let x = root.position[0];
+    let y = root.position[1];
+
+    let endX = end.position[0];
+    let endY = end.position[1];
+
+        if(inBounds([x+1,y+2])){
+                const UUR = new Node([x+1,y+2])
+                root.UpTwoRightOne = UUR;
+        };
+        if(inBounds([x-1,y+2])){
+                const UUL = new Node([x-1,y+2])
+                root.UpTwoLeftOne = UUL;
+        };
+        if(inBounds([x+2,y+1])){
+                const URR = new Node([x+2,y+1])
+                root.UpOneRightTwo = URR;
+        };
+        if(inBounds([x-2,y+1])){
+                const ULL = new Node([x-2,y+1])
+                root.UpOneLeftTwo = ULL;
+        };
+        if(inBounds([x+1,y-2])){
+                const DDR = new Node([x+1,y-2])
+                root.DownTwoRightOne = DDR;
+        };
+        if(inBounds([x-1,y-2])){
+                const DDL = new Node([x-1,y-2])
+                root.DownTwoLeftOne = DDL;
+        };
+        if(inBounds([x+2,y-1])){
+                const DRR = new Node([x+2,y-1])
+                root.DownOneRightTwo = DRR;
+        };
+        if(inBounds([x-2,y-1])){
+                const DLL = new Node([x-2,y-1])
+                root.DownOneLeftTwo = DLL;
+        };
 }
 
 class Tree {
-    constructor(root){
-        this.root = root;
+    constructor(root, end){
+        this.root = buildTree(root, end);
     };
     levelOrder(callBack){
 
@@ -84,3 +146,7 @@ class Tree {
     
     };
 }
+
+const startNode = new Node([0,0]);
+const endNode = new Node([3,3]);
+const decisionTree = new Tree(startNode, endNode); 
