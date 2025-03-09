@@ -42,9 +42,3 @@ function notVisited(node, visited){
     return true;
 }
 let visited = [];
-
-
-
-const startNode = new Node([0,0]);
-const endNode = new Node([3,3]);
-const decisionTree = new Tree(startNode, endNode); 
