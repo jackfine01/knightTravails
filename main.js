@@ -20,6 +20,9 @@ class Node{
 };                    
 
 function knightTravails(start, end){
+    const startNode = new Node(start)
+    const endNode = new Node(end)
+    const visitedNodes = [startNode];
     function inBounds(position){
         let x = position[0]
         let y = position[1]
@@ -47,7 +50,6 @@ function knightTravails(start, end){
         return false;
     }
     function expandMoves(node){
-
         const  UUR = new Node([node.position+1,node.position+2])
         const  UUL = new Node([node.position-1,node.position+2])
         const  DDR = new Node([node.position+1,node.position-2])
@@ -62,17 +64,27 @@ function knightTravails(start, end){
             let newMove = expandedMoves.shift();
             if(isValid(newMove)){
                 node.addChild(newMove, index)
+                visitedNodes.push(newMove);
             }else{
                 node.addChild(null, index)
             }
         }
     }
-    const startNode = new Node(start)
-    const endNode = new Node(end)
-    const visitedNodes = [startNode];
-    while(notVisited(endNode, visitedNodes)){
 
+    while(notVisited(endNode, visitedNodes)){
+        const queue = [startNode];
+        while(queue.length() > 0){
+            let current = queue.shift()
+            expandMoves(current);
+            for(let i = 0; i < 8; current++){
+                if(current.getChild(i)!=null){
+                    let queueAddNode = current.getChild(i);
+                    queue.push(queueAddNode);
+                }
+            }
+        }
     }
+    console.log(startNode)
 }
 
 // function idea: add childs to each of the children
