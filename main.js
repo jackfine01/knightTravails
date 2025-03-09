@@ -33,17 +33,49 @@ function knightTravails(start, end){
         } else
             return false;
     }
-    
-    function notVisited(node, visited){
-        console.log(node)
-        for(let i = 0; i < visited.length; i++){
-            if(visited[i] === node)
+    function notVisited(node, visitedArr){
+        for(let i = 0; i < visitedArr.length; i++){
+            if(visitedArr[i] == node)
                 return false;
         }
         return true;
     }
+    function isValid(node, visitedArr){
+        if(inBounds(node.position)&&notVisited(node, visitedArr)){
+            return true;
+        }
+        return false;
+    }
+    function expandMoves(node){
+
+        const  UUR = new Node([node.position+1,node.position+2])
+        const  UUL = new Node([node.position-1,node.position+2])
+        const  DDR = new Node([node.position+1,node.position-2])
+        const  DDL = new Node([node.position-1,node.position-2])
+        const  URR = new Node([node.position+2,node.position+1])
+        const  ULL = new Node([node.position-2,node.position+1])
+        const  DRR = new Node([node.position+2,node.position-1])
+        const  DLL = new Node([node.position-2,node.position-1])
+
+        const expandedMoves = [UUR,UUL,DDR,DDL,URR,ULL,DRR,DLL];
+        for(let i = 0; i < node.children.length(); i++){
+            let newMove = expandedMoves.shift();
+            if(isValid(newMove)){
+                node.addChild(newMove, index)
+            }else{
+                node.addChild(null, index)
+            }
+        }
+    }
     const startNode = new Node(start)
     const endNode = new Node(end)
     const visitedNodes = [startNode];
+    while(notVisited(endNode, visitedNodes)){
+
+    }
 }
+
+// function idea: add childs to each of the children
+    // Take a node
+    // for each index, add a child and set that to the index.
 
