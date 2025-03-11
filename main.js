@@ -4,25 +4,89 @@ class Node{
         this.children = new Array(8).fill(null)
     }
     addChild(node, index){
-        if(index > 0 && index < 8){
+        if(index >= 0 && index <= 8){
             this.children[index] = node;
         } else {
             console.log('child out of bounds')
         }
     }
     getChild(index){
-        if(index > 0 && index < 8){
+        if(index >= 0 && index <= 8){
             return this.children[index];
         } else {
             console.log('child out of bounds')
         }
     }
-};                    
+};
+class boardNode {
+    constructor(position){
+        this.visited = false;
+        this.position = position;
+    }
+    visit(){
+        this.visited = true;
+    }
+    
+}                    
+class Gameboard {
+    constructor(){
+        this.board = this.createBoard();
+    }
+    createBoard(){
+        let nodeList = [];
+        let matrix = [
+            [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],
+            [0,1],[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[7,1],
+            [0,2],[1,2],[2,2],[3,2],[4,2],[5,2],[6,2],[7,2],
+            [0,3],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3],[7,3],
+            [0,4],[1,4],[2,4],[3,4],[4,4],[5,4],[6,4],[7,4],
+            [0,5],[1,5],[2,5],[3,5],[4,5],[5,5],[6,5],[7,5],
+            [0,6],[1,6],[2,6],[3,6],[4,6],[5,6],[6,6],[7,6],
+            [0,7],[1,7],[2,7],[3,7],[4,7],[5,7],[6,7],[7,7]
+        ];
+        while(matrix.length>0){
+            let newNode = new boardNode(matrix.shift())
+            nodeList.push(newNode)
+        }
+        return nodeList;
+    };
+    visit(position){
+        let index = 0;
+        for(let i = 0; i < 64 ;i++){
+            let current = this.board[index].position;
+            if(current[0]==position[0]&&current[1]==position[1]){
+                this.board[index].visit();
+            }
+            index++;
+        };
+    };
+    visited(position){
+        let index = 0;
+        for(let i = 0; i < 64 ;i++){
+            let current = this.board[index].position;
+            if(current[0]==position[0]&&current[1]==position[1]){
+                console.log(this.board[index].visited)
+                return this.board[index].visited;
+            }
+            index++;
+        };
+    }
+}
+
+const testBoard = new Gameboard();
+testBoard.visit([7,7])
+testBoard.visit([3,4])
+testBoard.visit([1,7])
+testBoard.visit([0,7])
+console.log(testBoard)
+testBoard.visited([1,7])
+testBoard.visited([2,4])
+testBoard.visited([7,7])
 
 function knightTravails(start, end){
     const startNode = new Node(start)
     const endNode = new Node(end)
-    const visitedNodes = [startNode];
+    const gameboard = new Gameboard();
     function inBounds(position){
         let x = position[0]
         let y = position[1]
@@ -36,58 +100,47 @@ function knightTravails(start, end){
         } else
             return false;
     }
-    function notVisited(node, visitedArr){
-        for(let i = 0; i < visitedArr.length; i++){
-            if(visitedArr[i] == node)
-                return false;
-        }
-        return true;
-    }
-    function isValid(node, visitedArr){
-        if(inBounds(node.position)&&notVisited(node, visitedArr)){
+    function isValid(node){
+        if(inBounds(node.position)&&gameboard.visited(node.position)==false){
             return true;
         }
         return false;
     }
     function expandMoves(node){
-        const  UUR = new Node([node.position+1,node.position+2])
-        const  UUL = new Node([node.position-1,node.position+2])
-        const  DDR = new Node([node.position+1,node.position-2])
-        const  DDL = new Node([node.position-1,node.position-2])
-        const  URR = new Node([node.position+2,node.position+1])
-        const  ULL = new Node([node.position-2,node.position+1])
-        const  DRR = new Node([node.position+2,node.position-1])
-        const  DLL = new Node([node.position-2,node.position-1])
+        const  UUR = new Node([node.position[0]+1,node.position[1]+2])
+        const  UUL = new Node([node.position[0]-1,node.position[1]+2])
+        const  DDR = new Node([node.position[0]+1,node.position[1]-2])
+        const  DDL = new Node([node.position[0]-1,node.position[1]-2])
+        const  URR = new Node([node.position[0]+2,node.position[1]+1])
+        const  ULL = new Node([node.position[0]-2,node.position[1]+1])
+        const  DRR = new Node([node.position[0]+2,node.position[1]-1])
+        const  DLL = new Node([node.position[0]-2,node.position[1]-1])
 
-        const expandedMoves = [UUR,UUL,DDR,DDL,URR,ULL,DRR,DLL];
-        for(let i = 0; i < node.children.length(); i++){
+        let expandedMoves = [UUR,UUL,DDR,DDL,URR,ULL,DRR,DLL];
+        for(let i = 0; i < 8; i++){
             let newMove = expandedMoves.shift();
             if(isValid(newMove)){
-                node.addChild(newMove, index)
-                visitedNodes.push(newMove);
-            }else{
-                node.addChild(null, index)
+                gameboard.visit(newMove.position)
+                node.addChild(newMove, i);
             }
         }
     }
-
-    while(notVisited(endNode, visitedNodes)){
-        const queue = [startNode];
-        while(queue.length() > 0){
-            let current = queue.shift()
-            expandMoves(current);
-            for(let i = 0; i < 8; current++){
-                if(current.getChild(i)!=null){
-                    let queueAddNode = current.getChild(i);
-                    queue.push(queueAddNode);
-                }
-            }
-        }
-    }
-    console.log(startNode)
+    // for(let i = 0; i < 5; i ++){
+    //     let queue = [startNode];
+    //     for(let j = 0; j < 5; j++){
+    //         let current = queue.shift()
+    //         expandMoves(current);
+    //         for(let i = 0; i < 8; i++){
+    //             if(current.getChild(i)!=undefined){
+    //                 let queueAddNode = current.getChild(i);
+    //                 if(queueAddNode!=null){
+    //                     queue.push(queueAddNode);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    // console.log(gameboard.showGameboard())
+    // console.log(startNode)
 }
-
-// function idea: add childs to each of the children
-    // Take a node
-    // for each index, add a child and set that to the index.
-
+knightTravails([0,0],[3,3])
