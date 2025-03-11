@@ -50,6 +50,16 @@ class Gameboard {
         }
         return nodeList;
     };
+    find(position){
+        let index = 0;
+        for(let i = 0; i < 64 ;i++){
+            let current = this.board[index].position;
+            if(current[0]==position[0]&&current[1]==position[1]){
+                return index;
+            }
+            index++;
+        };
+    }; 
     visit(position){
         let index = 0;
         for(let i = 0; i < 64 ;i++){
@@ -65,7 +75,6 @@ class Gameboard {
         for(let i = 0; i < 64 ;i++){
             let current = this.board[index].position;
             if(current[0]==position[0]&&current[1]==position[1]){
-                console.log(this.board[index].visited)
                 return this.board[index].visited;
             }
             index++;
@@ -73,15 +82,15 @@ class Gameboard {
     }
 }
 
-const testBoard = new Gameboard();
-testBoard.visit([7,7])
-testBoard.visit([3,4])
-testBoard.visit([1,7])
-testBoard.visit([0,7])
-console.log(testBoard)
-testBoard.visited([1,7])
-testBoard.visited([2,4])
-testBoard.visited([7,7])
+// const testBoard = new Gameboard();
+// testBoard.visit([7,7])
+// testBoard.visit([3,4])
+// testBoard.visit([1,7])
+// testBoard.visit([0,7])
+// console.log(testBoard)
+// testBoard.visited([1,7])
+// testBoard.visited([2,4])
+// testBoard.visited([7,7])
 
 function knightTravails(start, end){
     const startNode = new Node(start)
@@ -125,22 +134,31 @@ function knightTravails(start, end){
             }
         }
     }
-    // for(let i = 0; i < 5; i ++){
-    //     let queue = [startNode];
-    //     for(let j = 0; j < 5; j++){
-    //         let current = queue.shift()
-    //         expandMoves(current);
-    //         for(let i = 0; i < 8; i++){
-    //             if(current.getChild(i)!=undefined){
-    //                 let queueAddNode = current.getChild(i);
-    //                 if(queueAddNode!=null){
-    //                     queue.push(queueAddNode);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    // console.log(gameboard.showGameboard())
-    // console.log(startNode)
+    const endIndex = gameboard.find(endNode.position);
+    console.log(endIndex)
+    while(gameboard.board[endIndex].visited == false){
+        // expand the moves until the node is visited.
+        // queue-->shift method.
+        let queue = [startNode];
+        while(queue.length>0){
+            console.log(queue)
+            let shiftedNode = queue.shift();
+            console.log(shiftedNode)
+            if(shiftedNode){
+                expandMoves(shiftedNode)
+                for(let i = 0; i <= 7; i++){
+                    let queuePush = shiftedNode.getChild(i);
+                    if(queuePush){
+                        console.log(queuePush)
+                        queue.push(queuePush);
+                    }
+                }
+            }
+        }
+        // get children of node, push them to the queue.
+        // repeat until the queue is an empty array.
+    }
+    console.log(gameboard)
+    console.log(startNode)
 }
 knightTravails([0,0],[3,3])
