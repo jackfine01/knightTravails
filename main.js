@@ -178,26 +178,18 @@ function knightTravails(start, end){
         }
     }
     const endIndex = gameboard.find(endNode.position);
-    // console.log(endIndex)
     let queue = [startNode];
     while(queue.length>0&&gameboard.board[endIndex].visited == false){
-        // console.log(queue)
         let shiftedNode = queue.shift();
-        // console.log('Looking at: '+ shiftedNode.position)
         if(shiftedNode){
-            // console.log('Expanding: '+ shiftedNode.position)
             expandMoves(shiftedNode)
             for(let i = 0; i <= 7; i++){
                 let queuePush = shiftedNode.getChild(i);
                 if(queuePush){
-                    // console.log('looking for ' + gameboard.board[endIndex].position)
                     if(gameboard.board[endIndex].visited == false){
-                        // console.log('Not Found')
                     } else if (gameboard.board[endIndex].visited == true){
-                        // console.log('Found')
                         reportNode = queuePush
                     }
-                    // console.log('Pushing: '+ queuePush.position)
                     queue.push(queuePush);
                 }
             }
@@ -207,4 +199,3 @@ function knightTravails(start, end){
     console.log(`You made it in ${moveCount} moves!  Here's your Path:`)
     console.log(reportNode.getParents())
 }
-knightTravails([3,3],[4,3])
