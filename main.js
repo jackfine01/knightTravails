@@ -136,29 +136,37 @@ function knightTravails(start, end){
     }
     const endIndex = gameboard.find(endNode.position);
     console.log(endIndex)
-    while(gameboard.board[endIndex].visited == false){
-        // expand the moves until the node is visited.
-        // queue-->shift method.
-        let queue = [startNode];
-        while(queue.length>0){
-            console.log(queue)
-            let shiftedNode = queue.shift();
-            console.log(shiftedNode)
-            if(shiftedNode){
-                expandMoves(shiftedNode)
-                for(let i = 0; i <= 7; i++){
-                    let queuePush = shiftedNode.getChild(i);
-                    if(queuePush){
-                        console.log(queuePush)
-                        queue.push(queuePush);
-                    }
+    let queue = [startNode];
+    while(queue.length>0&&gameboard.board[endIndex].visited == false){
+        console.log(queue)
+        let shiftedNode = queue.shift();
+        console.log('Expanding: '+ shiftedNode.position)
+        if(shiftedNode){
+            console.log('Expanding: '+ shiftedNode.position)
+            expandMoves(shiftedNode)
+            for(let i = 0; i <= 7; i++){
+                let queuePush = shiftedNode.getChild(i);
+                if(queuePush){
+                    console.log(gameboard.board[endIndex].visited == false)
+                    console.log('Pushing: '+ queuePush.position)
+                    queue.push(queuePush);
                 }
             }
         }
-        // get children of node, push them to the queue.
-        // repeat until the queue is an empty array.
     }
+
+        // CES/PA BUDGET AND VARIANCE ANALYSIS
+        // CORPORATE BUDGET PLANNING
+        // REPORT ACCURACY MODELING + MODEL CONSOLIDATION SPEED
+        // LOOKING INTO REVENUE VARIANCE ANALYSIS AND CONTINUE G&A VARIANCE ANALYSIS
+        // CONSOLIDATION OF REPORTS & REPORTING OF DATA IN BU SLIDES
+        // RATE CASE & ROE CALCULATION
+        // WEATHER CALCULATION
+        // SEMCO DATAHUB ---> TEMPLATE FOR RETRIEVE
+
     console.log(gameboard)
     console.log(startNode)
+
+        
 }
 knightTravails([0,0],[3,3])
