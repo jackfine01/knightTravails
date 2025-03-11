@@ -1,5 +1,6 @@
 class Node{
-    constructor(position){
+    constructor(position, parent){
+        this.parent = parent;
         this.position = position;
         this.children = new Array(8).fill(null)
     }
@@ -20,6 +21,35 @@ class Node{
     toString(){
         let str = ` [${this.position}] `;
         return str;
+    }
+    getParents(){
+        const start = this.position
+        let current = this.parent;
+        let arr = [start];
+        while(current){
+            arr.push(current.position);
+            current = current.parent;
+        }
+        arr = arr.reverse()
+        while(arr.length>0){
+            console.log(arr.shift())
+        }
+    }
+    moveCount(){
+        const start = this.position
+        let current = this.parent;
+        let arr = [start];
+        let count = 0;
+        while(current){
+            arr.push(current.position);
+            current = current.parent;
+        }
+        arr = arr.reverse()
+        while(arr.length>0){
+           arr.shift()
+           count++
+        }
+        return count-1;
     }
 };
 class boardNode {
@@ -92,12 +122,11 @@ function levelOrder(callback, node){
     let queue = [node];
         while(queue.length > 0){
             const current = queue.shift();
-            console.log(current.position)
             callback(current);
             for(let i = 0; i <= 7; i++){
                 let queuePush = current.getChild(i);
                 if(queuePush){
-                    console.log(queuePush.position)
+                    // console.log(queuePush.position)
                     queue.push(queuePush);
                 }
             }
@@ -105,9 +134,11 @@ function levelOrder(callback, node){
 }
 
 function knightTravails(start, end){
-    const startNode = new Node(start)
-    const endNode = new Node(end)
+    const startNode = new Node(start,null)
+    const endNode = new Node(end,null)
+    let reportNode;
     const gameboard = new Gameboard();
+    gameboard.visit(startNode)
     function inBounds(position){
         let x = position[0]
         let y = position[1]
@@ -128,14 +159,14 @@ function knightTravails(start, end){
         return false;
     }
     function expandMoves(node){
-        const  UUR = new Node([node.position[0]+1,node.position[1]+2])
-        const  UUL = new Node([node.position[0]-1,node.position[1]+2])
-        const  DDR = new Node([node.position[0]+1,node.position[1]-2])
-        const  DDL = new Node([node.position[0]-1,node.position[1]-2])
-        const  URR = new Node([node.position[0]+2,node.position[1]+1])
-        const  ULL = new Node([node.position[0]-2,node.position[1]+1])
-        const  DRR = new Node([node.position[0]+2,node.position[1]-1])
-        const  DLL = new Node([node.position[0]-2,node.position[1]-1])
+        const  UUR = new Node([node.position[0]+1,node.position[1]+2],node)
+        const  UUL = new Node([node.position[0]-1,node.position[1]+2],node)
+        const  DDR = new Node([node.position[0]+1,node.position[1]-2],node)
+        const  DDL = new Node([node.position[0]-1,node.position[1]-2],node)
+        const  URR = new Node([node.position[0]+2,node.position[1]+1],node)
+        const  ULL = new Node([node.position[0]-2,node.position[1]+1],node)
+        const  DRR = new Node([node.position[0]+2,node.position[1]-1],node)
+        const  DLL = new Node([node.position[0]-2,node.position[1]-1],node)
 
         let expandedMoves = [UUR,UUL,DDR,DDL,URR,ULL,DRR,DLL];
         for(let i = 0; i < 8; i++){
@@ -147,38 +178,33 @@ function knightTravails(start, end){
         }
     }
     const endIndex = gameboard.find(endNode.position);
-    console.log(endIndex)
+    // console.log(endIndex)
     let queue = [startNode];
     while(queue.length>0&&gameboard.board[endIndex].visited == false){
-        console.log(queue)
+        // console.log(queue)
         let shiftedNode = queue.shift();
-        console.log('Expanding: '+ shiftedNode.position)
+        // console.log('Looking at: '+ shiftedNode.position)
         if(shiftedNode){
-            console.log('Expanding: '+ shiftedNode.position)
+            // console.log('Expanding: '+ shiftedNode.position)
             expandMoves(shiftedNode)
             for(let i = 0; i <= 7; i++){
                 let queuePush = shiftedNode.getChild(i);
                 if(queuePush){
-                    console.log(gameboard.board[endIndex].visited == false)
-                    console.log('Pushing: '+ queuePush.position)
+                    // console.log('looking for ' + gameboard.board[endIndex].position)
+                    if(gameboard.board[endIndex].visited == false){
+                        // console.log('Not Found')
+                    } else if (gameboard.board[endIndex].visited == true){
+                        // console.log('Found')
+                        reportNode = queuePush
+                    }
+                    // console.log('Pushing: '+ queuePush.position)
                     queue.push(queuePush);
                 }
             }
         }
     }
-    // console.log(gameboard)
-    // console.log(startNode)
-    let nodes = [];
-    levelOrder(node => nodes.push(node.toString()), startNode)
-    // console.log(nodes)
-    // console.log(nodes.toString())
-    let finalString = `${startNode}`;
-    while(nodes.includes(endNode.toString())){
-        if(nodes.shift()){
-            finalString = finalString + "->" + nodes.shift()
-        }
-
-    }
-    console.log(finalString)
+    let moveCount = reportNode.moveCount();
+    console.log(`You made it in ${moveCount} moves!  Here's your Path:`)
+    console.log(reportNode.getParents())
 }
 knightTravails([3,3],[4,3])
