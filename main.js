@@ -17,6 +17,10 @@ class Node{
             console.log('child out of bounds')
         }
     }
+    toString(){
+        let str = ` [${this.position}] `;
+        return str;
+    }
 };
 class boardNode {
     constructor(position){
@@ -81,16 +85,24 @@ class Gameboard {
         };
     }
 }
-
-// const testBoard = new Gameboard();
-// testBoard.visit([7,7])
-// testBoard.visit([3,4])
-// testBoard.visit([1,7])
-// testBoard.visit([0,7])
-// console.log(testBoard)
-// testBoard.visited([1,7])
-// testBoard.visited([2,4])
-// testBoard.visited([7,7])
+function levelOrder(callback, node){
+    if(typeof callback !== 'function'){
+        throw new Error('Not a function');
+    }
+    let queue = [node];
+        while(queue.length > 0){
+            const current = queue.shift();
+            console.log(current.position)
+            callback(current);
+            for(let i = 0; i <= 7; i++){
+                let queuePush = current.getChild(i);
+                if(queuePush){
+                    console.log(queuePush.position)
+                    queue.push(queuePush);
+                }
+            }
+        };
+}
 
 function knightTravails(start, end){
     const startNode = new Node(start)
@@ -154,19 +166,19 @@ function knightTravails(start, end){
             }
         }
     }
+    // console.log(gameboard)
+    // console.log(startNode)
+    let nodes = [];
+    levelOrder(node => nodes.push(node.toString()), startNode)
+    // console.log(nodes)
+    // console.log(nodes.toString())
+    let finalString = `${startNode}`;
+    while(nodes.includes(endNode.toString())){
+        if(nodes.shift()){
+            finalString = finalString + "->" + nodes.shift()
+        }
 
-        // CES/PA BUDGET AND VARIANCE ANALYSIS
-        // CORPORATE BUDGET PLANNING
-        // REPORT ACCURACY MODELING + MODEL CONSOLIDATION SPEED
-        // LOOKING INTO REVENUE VARIANCE ANALYSIS AND CONTINUE G&A VARIANCE ANALYSIS
-        // CONSOLIDATION OF REPORTS & REPORTING OF DATA IN BU SLIDES
-        // RATE CASE & ROE CALCULATION
-        // WEATHER CALCULATION
-        // SEMCO DATAHUB ---> TEMPLATE FOR RETRIEVE
-
-    console.log(gameboard)
-    console.log(startNode)
-
-        
+    }
+    console.log(finalString)
 }
-knightTravails([0,0],[3,3])
+knightTravails([3,3],[4,3])
